@@ -1,5 +1,5 @@
 import { Play, RotateCcw, Home, Volume2, VolumeX, Camera } from 'lucide-react';
-import { MatchSettings } from '../types/game';
+import { CameraMode, MatchSettings } from '../types/game';
 
 interface PauseMenuProps {
   settings: MatchSettings;
@@ -61,15 +61,24 @@ export function PauseMenu({
 
             <button
               type="button"
-              onClick={() =>
-                onUpdateSettings({
-                  cameraZoom: settings.cameraZoom === 'broadcast' ? 'wide' : 'broadcast',
-                })
-              }
+              onClick={() => {
+                const modes: CameraMode[] = ['broadcast', 'action', 'endline', 'tactical'];
+                const current = settings.cameraMode || 'broadcast';
+                const next = modes[(modes.indexOf(current) + 1) % modes.length];
+                onUpdateSettings({ cameraMode: next });
+              }}
               className="py-2.5 px-3 bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-200 text-xs font-medium rounded-xl flex items-center justify-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
             >
               <Camera className="w-4 h-4 text-sky-400" />
-              <span>{settings.cameraZoom === 'broadcast' ? 'Broadcast Cam' : 'Wide Cam'}</span>
+              <span>
+                {settings.cameraMode === 'action'
+                  ? 'Action 3D'
+                  : settings.cameraMode === 'endline'
+                  ? 'Endline 3D'
+                  : settings.cameraMode === 'tactical'
+                  ? 'Tactical 4D'
+                  : 'Broadcast 3D'}
+              </span>
             </button>
           </div>
 

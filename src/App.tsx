@@ -21,6 +21,7 @@ export default function App() {
     startMatch,
     togglePause,
     returnToMenu,
+    cycleCamera,
     updateSettings,
     inputActions,
   } = useGameLifecycle(threeContainerRef, canvas2DRef);
@@ -60,7 +61,12 @@ export default function App() {
       {/* 4. Active Match HUD & Controller */}
       {isInMatch && (
         <>
-          <Scoreboard hud={hud} onPause={togglePause} />
+          <Scoreboard
+            hud={hud}
+            onPause={togglePause}
+            onToggleCamera={cycleCamera}
+            cameraMode={settings.cameraMode}
+          />
           <GameControls
             onJoystick={inputActions.setJoystick}
             onSprint={inputActions.setSprint}

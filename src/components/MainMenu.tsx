@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Play, SlidersHorizontal, Keyboard, Volume2, VolumeX } from 'lucide-react';
-import { DifficultyLevel, MatchSettings, TeamKit } from '../types/game';
+import { CameraMode, DifficultyLevel, MatchSettings, TeamKit } from '../types/game';
 
 interface MainMenuProps {
   homeTeam: TeamKit;
@@ -199,20 +199,27 @@ export function MainMenu({
               </div>
 
               <div>
-                <label className="block text-xs text-slate-400 mb-1.5">Camera Perspective</label>
+                <label className="block text-xs text-slate-400 mb-1.5">Cinematic 3D / 4D Perspective</label>
                 <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-950 rounded-lg">
-                  {(['broadcast', 'wide'] as const).map((cam) => (
+                  {(
+                    [
+                      { id: 'broadcast', label: 'Broadcast 3D' },
+                      { id: 'action', label: 'Action 3D' },
+                      { id: 'endline', label: 'Endline 3D' },
+                      { id: 'tactical', label: 'Tactical 4D' },
+                    ] as const
+                  ).map((cam) => (
                     <button
-                      key={cam}
+                      key={cam.id}
                       type="button"
-                      onClick={() => onUpdateSettings({ cameraZoom: cam })}
-                      className={`py-1.5 px-3 text-xs font-medium rounded-md capitalize transition-colors cursor-pointer whitespace-nowrap ${
-                        settings.cameraZoom === cam
+                      onClick={() => onUpdateSettings({ cameraMode: cam.id })}
+                      className={`py-1.5 px-2 text-xs font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
+                        (settings.cameraMode || 'broadcast') === cam.id
                           ? 'bg-sky-500 text-slate-950 font-semibold'
                           : 'text-slate-300 hover:text-white'
                       }`}
                     >
-                      {cam === 'broadcast' ? 'Broadcast Oblique' : 'Wide Tactical'}
+                      {cam.label}
                     </button>
                   ))}
                 </div>
@@ -254,9 +261,13 @@ export function MainMenu({
                 <span className="text-slate-400">Sprint</span>
                 <span className="font-mono-tabular text-white">Shift / Sprint Button</span>
               </div>
-              <div className="flex justify-between py-1">
+              <div className="flex justify-between py-1 border-b border-slate-800">
                 <span className="text-slate-400">Switch Player / Lunge Tackle</span>
                 <span className="font-mono-tabular text-white">Tab or C / Switch Button</span>
+              </div>
+              <div className="flex justify-between py-1">
+                <span className="text-slate-400">Switch 3D / 4D Camera</span>
+                <span className="font-mono-tabular text-sky-400">V / Camera Icon</span>
               </div>
             </div>
           </div>
