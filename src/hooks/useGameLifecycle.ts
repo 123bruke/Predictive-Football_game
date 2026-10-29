@@ -3,7 +3,7 @@ import { GameEngine } from '../game/GameEngine';
 import { GameLoop } from '../game/GameLoop';
 import { PlayerRenderer } from '../rendering/PlayerRenderer';
 import { ThreeScene } from '../rendering/ThreeScene';
-import { MatchHUDState, MatchSettings } from '../types/game';
+import { CameraMode, MatchHUDState, MatchSettings } from '../types/game';
 
 export interface GameLifecycleControls {
   hud: MatchHUDState;
@@ -11,6 +11,7 @@ export interface GameLifecycleControls {
   startMatch: () => void;
   togglePause: () => void;
   returnToMenu: () => void;
+  cycleCamera: () => void;
   updateSettings: (partial: Partial<MatchSettings>) => void;
   inputActions: {
     setJoystick: (x: number, y: number) => void;
@@ -37,6 +38,16 @@ export function useGameLifecycle(
     ...engineRef.current!.settings,
   }));
 
+  const cycleCamera = useCallback(() => {
+    if (!engineRef.current) return;
+    const modes: CameraMode[] = ['broadcast', 'action', 'endline', 'tactical'];
+    const current = engineRef.current.settings.cameraMode || 'broadcast';
+    const nextIdx = (modes.indexOf(current) + 1) % modes.length;
+    const nextMode = modes[nextIdx];
+    engineRef.current.updateSettings({ cameraMode: nextMode });
+    setSettings({ ...engineRef.current.settings });
+  }, []);
+
   useEffect(() => {
     const engine = engineRef.current!;
     const threeContainer = threeContainerRef.current;
@@ -47,6 +58,13 @@ export function useGameLifecycle(
       setHud(newHud);
     });
     engine.input.attach();
+
+    const handleCameraKey = (e: KeyboardEvent) => {
+      if (e.code === 'KeyV') {
+        cycleCamera();
+      }
+    };
+    window.addEventListener('keydown', handleCameraKey);
 
     const threeScene = new ThreeScene(threeContainer, engine.pitch);
     const playerRenderer = new PlayerRenderer();
@@ -74,13 +92,7 @@ export function useGameLifecycle(
     const loop = new GameLoop(
       (dt) => {
         engine.update(dt);
-        threeScene.updateAndRender(
-          dt,
-          engine.ball.state.x,
-          engine.ball.state.y,
-          engine.phase,
-          engine.settings.cameraZoom
-        );
+        threeScene.updateAndRender(dt, engine);
         if (ctx2D) {
           const width = threeContainer.clientWidth || window.innerWidth;
           const height = threeContainer.clientHeight || window.innerHeight;
@@ -96,10 +108,11 @@ export function useGameLifecycle(
     return () => {
       loop.stop();
       window.removeEventListener('resize', syncViewportSize);
+      window.removeEventListener('keydown', handleCameraKey);
       threeScene.dispose();
       engine.dispose();
     };
-  }, [threeContainerRef, canvas2DRef]);
+  }, [threeContainerRef, canvas2DRef, cycleCamera]);
 
   const startMatch = useCallback(() => {
     engineRef.current?.startNewMatch();
@@ -135,6 +148,7 @@ export function useGameLifecycle(
     startMatch,
     togglePause,
     returnToMenu,
+    cycleCamera,
     updateSettings,
     inputActions,
   };
