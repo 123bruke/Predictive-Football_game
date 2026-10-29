@@ -1,3 +1,4 @@
+<img width="1902" height="776" alt="Screenshot 2026-10-29 223103" src="https://github.com/user-attachments/assets/57d8189f-2761-46c5-ada4-b36314395d36" />
 # PitchSide 5v5 — Arcade Stadium Football
 
 A responsive 2D arcade football game set inside an immersive 3D stadium with 5v5 gameplay, tactical AI, full keyboard and touch controls.
