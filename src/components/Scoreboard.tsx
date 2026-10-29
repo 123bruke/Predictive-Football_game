@@ -18,10 +18,10 @@ export function Scoreboard({ hud, onPause, onToggleCamera, cameraMode }: Scorebo
     cameraMode === 'action'
       ? 'Action 3D'
       : cameraMode === 'endline'
-      ? 'Endline 3D'
-      : cameraMode === 'tactical'
-      ? 'Tactical 4D'
-      : 'Broadcast 3D';
+        ? 'Endline 3D'
+        : cameraMode === 'tactical'
+          ? 'Tactical 4D'
+          : 'Broadcast 3D';
 
   return (
     <>

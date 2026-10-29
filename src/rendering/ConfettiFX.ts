@@ -126,3 +126,4 @@ export class ConfettiFX {
     (this.instancedMesh.material as THREE.Material).dispose();
   }
 }
+

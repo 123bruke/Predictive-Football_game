@@ -150,3 +150,4 @@ export class Ball3DMesh {
     (this.trailLine.material as THREE.Material).dispose();
   }
 }
+
