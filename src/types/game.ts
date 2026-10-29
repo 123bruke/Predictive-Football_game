@@ -25,6 +25,8 @@ export type RestartType = 'KICKOFF' | 'THROW_IN' | 'GOAL_KICK' | 'CORNER_KICK';
 
 export type DifficultyLevel = 'casual' | 'standard' | 'pro';
 
+export type CameraMode = 'broadcast' | 'action' | 'endline' | 'tactical';
+
 export interface Vec2 {
   x: number;
   y: number;
@@ -150,6 +152,7 @@ export interface MatchSettings {
   difficulty: DifficultyLevel;
   soundEnabled: boolean;
   cameraZoom: 'broadcast' | 'wide';
+  cameraMode: CameraMode;
 }
 
 export interface GoalBannerInfo {

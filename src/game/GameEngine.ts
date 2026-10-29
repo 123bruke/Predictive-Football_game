@@ -45,6 +45,7 @@ export class GameEngine {
     difficulty: 'standard',
     soundEnabled: true,
     cameraZoom: 'broadcast',
+    cameraMode: 'broadcast',
   };
 
   public homeScore = 0;
